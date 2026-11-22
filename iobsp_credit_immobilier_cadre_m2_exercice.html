@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice d'entraînement — module 2</title><style>
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;
+ -webkit-user-select:none;-moz-user-select:none;user-select:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+.consigne{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:26px 0 8px;font-size:15px}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.etiq{display:inline-block;background:var(--prune-clair);color:var(--prune-fonce);font-size:11.5px;
+ letter-spacing:.09em;text-transform:uppercase;padding:3px 10px;border-radius:11px;font-weight:700;margin-bottom:10px}
+.enonce{font-weight:700;color:var(--vert);font-size:16.5px;margin:0 0 12px}
+.scenario{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:14px 16px;margin:0 0 14px;font-size:15px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:7px 0}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border:1.5px solid var(--filet);
+ border-radius:8px;cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
+.opts label:hover{border-color:var(--accent);background:#FDF9FC}
+.opts input{margin-top:4px;accent-color:var(--prune);flex:0 0 auto}
+.opts label.bonne{border-color:var(--ok);background:#F1F8F3}
+.opts label.mauvaise{border-color:var(--ko);background:#FBF2F2}
+.fb{margin-top:14px;padding:13px 16px;border-radius:8px;font-size:14.7px;display:none}
+.fb.on{display:block}
+.fb.j{background:#F1F8F3;border-left:4px solid var(--ok)}
+.fb.n{background:#FBF2F2;border-left:4px solid var(--ko)}
+.fb .verdict{font-weight:800;display:block;margin-bottom:5px}
+.fb.j .verdict{color:var(--ok)}.fb.n .verdict{color:var(--ko)}
+.ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gris-moyen);font-style:italic}
+button{font-family:inherit;font-size:15px;font-weight:800;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+button.principal{background:var(--prune);color:#fff}
+button.principal:hover{background:var(--prune-fonce)}
+button.principal:disabled{background:#D9CBD5;color:#fff;cursor:not-allowed}
+button.secondaire{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--prune)}
+.barre-actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+.bilan{display:none;margin:28px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--filet);background:#fff}
+.bilan.on{display:block}
+.bilan .tete{padding:20px 24px;color:#fff;text-align:center}
+.bilan .tete .pct{font-family:Georgia,serif;font-size:40px;font-weight:700;line-height:1}
+.bilan .tete .lib{font-size:14px;letter-spacing:.11em;text-transform:uppercase;margin-top:6px;opacity:.92}
+.bilan .corps{padding:18px 24px;font-size:15px}
+.progression{height:7px;background:var(--filet);border-radius:4px;overflow:hidden;margin:22px 0 4px}
+.progression i{display:block;height:100%;background:var(--prune);width:0;transition:width .3s}
+.compteur{font-size:12.5px;color:var(--gris-moyen);text-align:right}
+input[type=number]{font-family:inherit;font-size:15.5px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--vert);font-weight:700;width:130px;
+ -webkit-user-select:text;-moz-user-select:text;user-select:text}
+input:focus{outline:0;border-color:var(--accent)}
+input.bon{border-color:var(--ok);background:#F1F8F3}
+input.faux{border-color:var(--ko);background:#FBF2F2}
+.ligne-reponse{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ligne-reponse .unite{font-size:14.5px;color:var(--gris-moyen)}
+.reserve{display:flex;flex-wrap:wrap;gap:9px;padding:16px;background:#fff;border:1.5px dashed var(--accent);
+ border-radius:10px;min-height:64px;align-content:flex-start}
+.jeton{background:var(--prune-clair);border:1.5px solid var(--accent);color:var(--prune-fonce);
+ padding:8px 13px;border-radius:20px;font-size:14.3px;font-weight:700;cursor:grab;line-height:1.35}
+.jeton.actif{background:var(--prune);color:#fff;border-color:var(--prune-fonce);box-shadow:0 0 0 3px rgba(140,30,112,.18)}
+.jeton.bon{background:#EAF5EE;border-color:var(--ok);color:#1E5334}
+.jeton.faux{background:#FBF2F2;border-color:var(--ko);color:#8C2626}
+.zones{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.zone{background:#fff;border:1.5px solid var(--filet);border-radius:10px;padding:12px 14px;min-height:120px}
+.zone.survol{border-color:var(--prune);background:#FDF7FB}
+.zone h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15.5px;color:var(--prune-fonce)}
+.zone .desc{font-size:12.7px;color:var(--gris-moyen);margin:0 0 10px;line-height:1.4}
+.zone .depot{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+.aide{font-size:13.6px;color:var(--gris-moyen);margin-top:10px;font-style:italic}
+footer.pied{text-align:center;font-size:12.4px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:560px){h1{font-size:22px}.carte{padding:16px 15px}.wrap{padding:0 13px 44px}}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">IOBSP Niveau 2 · Journée 5 <span>/</span> Crédit immobilier (1/3) — Module 2</div><h1>Exercice d'entraînement — module 2</h1><p class="sous">3 activités · les intervenants du marché · non noté · environ 18 min</p>
+</div></header>
+<div class="wrap">
+<div class="consigne"><b>🎯 Exercice d'entraînement.</b> Trois activités : attribuer huit caractéristiques à leur intervenant, trancher huit situations, vérifier six affirmations. La question du module, pour chacun : <b>quel texte l'encadre, et que n'a-t-il pas le droit de faire ?</b> Aucune note n'est conservée et rien n'est à déposer.</div>
+<div class="progression"><i id="jauge"></i></div>
+<div class="compteur" id="compteur">0 / 22 réponses</div>
+<div class="carte"><span class="etiq">Activité 1 — À chacun son texte</span><div class="scenario">Huit caractéristiques, cinq intervenants. Notez que le conseiller en gestion de patrimoine ne figure pas dans les colonnes — et demandez-vous pourquoi.</div><div class="reserve" id="reserve"><div class="jeton" draggable="true" data-id="j1">Monopole de l&#x27;authenticité : date certaine, force probante, force exécutoire</div><div class="jeton" draggable="true" data-id="j2">Rémunération tarifée sous forme d&#x27;émoluments, non négociable</div><div class="jeton" draggable="true" data-id="j3">Carte professionnelle T, G ou S délivrée par la CCI pour trois ans</div><div class="jeton" draggable="true" data-id="j4">Mandat écrit obligatoire, à peine de ne percevoir aucune rémunération</div><div class="jeton" draggable="true" data-id="j5">Adhésion obligatoire à une association professionnelle agréée par l&#x27;AMF</div><div class="jeton" draggable="true" data-id="j6">Immatriculation à l&#x27;ORIAS, sans délivrance de carte professionnelle</div><div class="jeton" draggable="true" data-id="j7">Vend un bien qu&#x27;il produit, après avoir acheté le terrain et monté le programme</div><div class="jeton" draggable="true" data-id="j8">Construit sur un terrain qui appartient déjà au client, sous garantie de livraison</div></div><p class="aide">Faites glisser les étiquettes, ou touchez une étiquette puis la colonne.</p><div class="zones"><div class="zone" data-zone="not"><h4>Le notaire</h4><p class="desc">Officier public</p><div class="depot"></div></div><div class="zone" data-zone="agt"><h4>L'agent immobilier</h4><p class="desc">Loi Hoguet</p><div class="depot"></div></div><div class="zone" data-zone="cif"><h4>Le CIF</h4><p class="desc">L. 541-1 et s. CMF</p><div class="depot"></div></div><div class="zone" data-zone="pro"><h4>Le promoteur</h4><p class="desc">Pas de statut unique</p><div class="depot"></div></div><div class="zone" data-zone="cst"><h4>Le constructeur</h4><p class="desc">Code de la construction</p><div class="depot"></div></div></div><div class="fb" id="fbT"></div></div>
+<div class="carte"><span class="etiq">Activité 2 — Huit situations</span><div class="scenario">Pour chacune : le professionnel reste-t-il dans son statut ?</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un agent immobilier titulaire de la carte T annonce à son acquéreur qu&#x27;il va « monter son dossier de financement » auprès de sa banque partenaire. Que faut-il en penser ?</p><ul class="opts"><li><label id="cl0_0"><input type="radio" name="ca0" value="0"><span>C&#x27;est licite : la carte T couvre l&#x27;ensemble de l&#x27;opération immobilière</span></label></li><li><label id="cl0_1"><input type="radio" name="ca0" value="1"><span>C&#x27;est licite s&#x27;il ne perçoit aucune rémunération pour cela</span></label></li><li><label id="cl0_2"><input type="radio" name="ca0" value="2"><span>Il exerce une activité d&#x27;intermédiation en opérations de banque : sans immatriculation IOBSP, il est en infraction</span></label></li><li><label id="cl0_3"><input type="radio" name="ca0" value="3"><span>C&#x27;est licite avec l&#x27;accord écrit de la banque</span></label></li></ul><div class="fb" id="fca0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le conseil en gestion de patrimoine est-il un statut réglementé ?</p><ul class="opts"><li><label id="cl1_0"><input type="radio" name="ca1" value="0"><span>Oui, avec une carte délivrée par l&#x27;AMF</span></label></li><li><label id="cl1_1"><input type="radio" name="ca1" value="1"><span>Oui, depuis la loi ALUR</span></label></li><li><label id="cl1_2"><input type="radio" name="ca1" value="2"><span>Oui, avec une immatriculation à l&#x27;ORIAS en catégorie CGP</span></label></li><li><label id="cl1_3"><input type="radio" name="ca1" value="3"><span>Non : c&#x27;est une appellation professionnelle, ce sont les activités exercées qui sont réglementées</span></label></li></ul><div class="fb" id="fca1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le notaire est-il soumis à la loi Hoguet ?</p><ul class="opts"><li><label id="cl2_0"><input type="radio" name="ca2" value="0"><span>Non : sa profession est réglementée par d&#x27;autres textes</span></label></li><li><label id="cl2_1"><input type="radio" name="ca2" value="1"><span>Oui, dès lors qu&#x27;il intervient dans une transaction immobilière</span></label></li><li><label id="cl2_2"><input type="radio" name="ca2" value="2"><span>Oui, mais uniquement pour la négociation immobilière</span></label></li><li><label id="cl2_3"><input type="radio" name="ca2" value="3"><span>Oui, il doit détenir une carte T</span></label></li></ul><div class="fb" id="fca2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un agent immobilier a fait visiter, négocié et abouti à un compromis, mais ne détient aucun mandat écrit. Peut-il réclamer sa commission ?</p><ul class="opts"><li><label id="cl3_0"><input type="radio" name="ca3" value="0"><span>Oui, le travail a été accompli</span></label></li><li><label id="cl3_1"><input type="radio" name="ca3" value="1"><span>Non : l&#x27;article 6 de la loi Hoguet exige un mandat écrit, et percevoir sans mandat est un délit</span></label></li><li><label id="cl3_2"><input type="radio" name="ca3" value="2"><span>Oui, si le vendeur reconnaît la mission par écrit après coup</span></label></li><li><label id="cl3_3"><input type="radio" name="ca3" value="3"><span>Oui, à hauteur de la moitié</span></label></li></ul><div class="fb" id="fca3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quelle est la différence entre un promoteur et un constructeur de maisons individuelles ?</p><ul class="opts"><li><label id="cl4_0"><input type="radio" name="ca4" value="0"><span>Aucune, ce sont deux appellations du même métier</span></label></li><li><label id="cl4_1"><input type="radio" name="ca4" value="1"><span>Le promoteur construit, le constructeur vend</span></label></li><li><label id="cl4_2"><input type="radio" name="ca4" value="2"><span>Le promoteur vend un bien qu&#x27;il produit ; le constructeur bâtit sur le terrain du client</span></label></li><li><label id="cl4_3"><input type="radio" name="ca4" value="3"><span>La différence tient uniquement à la taille de l&#x27;opération</span></label></li></ul><div class="fb" id="fca4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un CIF peut-il recevoir des fonds de ses clients ?</p><ul class="opts"><li><label id="cl5_0"><input type="radio" name="ca5" value="0"><span>Oui, sans restriction</span></label></li><li><label id="cl5_1"><input type="radio" name="ca5" value="1"><span>Oui, jusqu&#x27;à 50 000 € par client</span></label></li><li><label id="cl5_2"><input type="radio" name="ca5" value="2"><span>Oui, s&#x27;il dispose d&#x27;une garantie financière</span></label></li><li><label id="cl5_3"><input type="radio" name="ca5" value="3"><span>Non, sauf ceux destinés à rémunérer son activité de conseil</span></label></li></ul><div class="fb" id="fca5"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un professionnel souhaite exercer à la fois le conseil en investissements financiers, la distribution d&#x27;assurance et l&#x27;intermédiation en crédit. Est-ce possible ?</p><ul class="opts"><li><label id="cl6_0"><input type="radio" name="ca6" value="0"><span>Oui : le cumul de statuts est licite, à condition de détenir chacun d&#x27;eux séparément</span></label></li><li><label id="cl6_1"><input type="radio" name="ca6" value="1"><span>Non, ces activités sont incompatibles entre elles</span></label></li><li><label id="cl6_2"><input type="radio" name="ca6" value="2"><span>Oui, une seule immatriculation ORIAS suffit pour les trois</span></label></li><li><label id="cl6_3"><input type="radio" name="ca6" value="3"><span>Oui, s&#x27;il se déclare conseiller en gestion de patrimoine</span></label></li></ul><div class="fb" id="fca6"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Comment vérifier sous quels statuts un professionnel est réellement immatriculé ?</p><ul class="opts"><li><label id="cl7_0"><input type="radio" name="ca7" value="0"><span>En lui demandant sa carte de visite</span></label></li><li><label id="cl7_1"><input type="radio" name="ca7" value="1"><span>En consultant le registre de l&#x27;ORIAS, qui est public</span></label></li><li><label id="cl7_2"><input type="radio" name="ca7" value="2"><span>En interrogeant la chambre de commerce et d&#x27;industrie</span></label></li><li><label id="cl7_3"><input type="radio" name="ca7" value="3"><span>Ce n&#x27;est pas vérifiable par un tiers</span></label></li></ul><div class="fb" id="fca7"></div></div></div>
+<div class="carte"><span class="etiq">Activité 3 — Vrai ou faux</span><div class="scenario">Six affirmations sur les statuts des intervenants.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le notaire perçoit des honoraires librement négociables.</p><ul class="opts"><li><label id="vl0_1"><input type="radio" name="vf0" value="1"><span>Vrai</span></label></li><li><label id="vl0_0"><input type="radio" name="vf0" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un agent immobilier exerçant la transaction et la gestion doit détenir deux cartes.</p><ul class="opts"><li><label id="vl1_1"><input type="radio" name="vf1" value="1"><span>Vrai</span></label></li><li><label id="vl1_0"><input type="radio" name="vf1" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Il est délivré une carte professionnelle au conseiller en investissements financiers.</p><ul class="opts"><li><label id="vl2_1"><input type="radio" name="vf2" value="1"><span>Vrai</span></label></li><li><label id="vl2_0"><input type="radio" name="vf2" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le CIF adhère à une association professionnelle agréée par l&#x27;ACPR.</p><ul class="opts"><li><label id="vl3_1"><input type="radio" name="vf3" value="1"><span>Vrai</span></label></li><li><label id="vl3_0"><input type="radio" name="vf3" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">N&#x27;importe qui peut se dire conseiller en gestion de patrimoine.</p><ul class="opts"><li><label id="vl4_1"><input type="radio" name="vf4" value="1"><span>Vrai</span></label></li><li><label id="vl4_0"><input type="radio" name="vf4" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un IOBSP peut recommander à son client un placement financier en complément de son crédit.</p><ul class="opts"><li><label id="vl5_1"><input type="radio" name="vf5" value="1"><span>Vrai</span></label></li><li><label id="vl5_0"><input type="radio" name="vf5" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv5"></div></div></div>
+ <div class="bilan" id="bilan">
+  <div class="tete" id="bilan-tete"><div class="pct" id="bilan-pct">0 %</div><div class="lib" id="bilan-lib"></div></div>
+  <div class="corps" id="bilan-corps"></div>
+ </div>
+ <div class="barre-actions">
+  <button class="principal" id="btn-valider">Vérifier mes réponses</button>
+  <button class="secondaire" id="btn-refaire">Refaire l'exercice</button>
+ </div>
+</div>
+<footer class="pied">TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+<script>
+(function(){
+  function libre(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  ['copy','cut','contextmenu'].forEach(function(ev){
+    document.addEventListener(ev,function(e){ if(!libre(e)) e.preventDefault(); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(libre(e)) return;
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].indexOf(k)>-1) e.preventDefault();
+  });
+})();
+function palier(p){
+  if(p>=90) return {lib:'Excellent', c:'#2F7A4F'};
+  if(p>=70) return {lib:'Validé', c:'#3F7A5E'};
+  if(p>=50) return {lib:'À consolider', c:'#B5852A'};
+  return {lib:'À retravailler', c:'#B23B3B'};
+}
+function afficherBilan(bon,total,texte){
+  var p = total? Math.round(bon*100/total):0, pa=palier(p);
+  document.getElementById('bilan-tete').style.background=pa.c;
+  document.getElementById('bilan-pct').textContent=p+' %';
+  document.getElementById('bilan-lib').textContent=pa.lib+' — '+bon+' / '+total;
+  document.getElementById('bilan-corps').innerHTML=texte;
+  var b=document.getElementById('bilan'); b.classList.add('on');
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+var JZ={"j1": "not", "j2": "not", "j3": "agt", "j4": "agt", "j5": "cif", "j6": "cif", "j7": "pro", "j8": "cst"}, JL={"j1": "Monopole de l'authenticité : date certaine, force probante, force exécutoire", "j2": "Rémunération tarifée sous forme d'émoluments, non négociable", "j3": "Carte professionnelle T, G ou S délivrée par la CCI pour trois ans", "j4": "Mandat écrit obligatoire, à peine de ne percevoir aucune rémunération", "j5": "Adhésion obligatoire à une association professionnelle agréée par l'AMF", "j6": "Immatriculation à l'ORIAS, sans délivrance de carte professionnelle", "j7": "Vend un bien qu'il produit, après avoir acheté le terrain et monté le programme", "j8": "Construit sur un terrain qui appartient déjà au client, sous garantie de livraison"}, JE={"j1": "Le notaire, officier public et ministériel. C'est de sa délégation de puissance publique que découle ce monopole.", "j2": "Le notaire encore. Ce ne sont pas des honoraires libres : le tarif est réglementé.", "j3": "L'agent immobilier, au titre de la loi Hoguet. Une carte par activité exercée.", "j4": "L'article 6 de la loi Hoguet. Sans mandat, pas de rémunération — quelle que soit la réalité du travail accompli.", "j5": "Le conseiller en investissements financiers, article L. 541-4 du code monétaire et financier. Attention : l'AMF, et non l'ACPR.", "j6": "Le CIF est immatriculé au même registre unique que vous, dans une catégorie différente. Il n'existe pas de carte professionnelle du CIF.", "j7": "Le promoteur immobilier. Il n'existe ni carte ni statut unique : ce sont les contrats et les garanties qui l'encadrent.", "j8": "Le constructeur de maisons individuelles, régime issu de la loi du 19 décembre 1990."}, ZL={"not": "Le notaire", "agt": "L'agent immobilier", "cif": "Le CIF", "pro": "Le promoteur", "cst": "Le constructeur"}, CS=[{"c": 2, "e": "La carte T ne couvre que la transaction immobilière. Présenter une opération de banque et aider à sa conclusion relève de l'intermédiation, et le défaut d'immatriculation est puni de deux ans d'emprisonnement et 6 000 € d'amende. En pratique, la bonne réponse est de proposer un partenariat formalisé.", "opts": ["C'est licite : la carte T couvre l'ensemble de l'opération immobilière", "C'est licite s'il ne perçoit aucune rémunération pour cela", "Il exerce une activité d'intermédiation en opérations de banque : sans immatriculation IOBSP, il est en infraction", "C'est licite avec l'accord écrit de la banque"]}, {"c": 3, "e": "Il n'existe ni carte, ni registre propre, ni autorité de tutelle du CGP en tant que tel. Derrière la bannière, il y a autant de statuts que d'activités : CIF, intermédiaire en assurance, IOBSP, carte professionnelle Hoguet — chacun acquis séparément.", "opts": ["Oui, avec une carte délivrée par l'AMF", "Oui, depuis la loi ALUR", "Oui, avec une immatriculation à l'ORIAS en catégorie CGP", "Non : c'est une appellation professionnelle, ce sont les activités exercées qui sont réglementées"]}, {"c": 0, "e": "Il intervient dans les transactions immobilières mais relève d'autres textes. Il peut d'ailleurs exercer une activité de négociation immobilière dans son propre cadre statutaire.", "opts": ["Non : sa profession est réglementée par d'autres textes", "Oui, dès lors qu'il intervient dans une transaction immobilière", "Oui, mais uniquement pour la négociation immobilière", "Oui, il doit détenir une carte T"]}, {"c": 1, "e": "Sans mandat écrit, pas de rémunération — quelle que soit la réalité du travail. La perception d'une somme en violation de l'article 6 est punie de deux ans d'emprisonnement et 30 000 € d'amende. Vous reconnaissez la logique de l'article L. 519-6 pour l'IOBSP.", "opts": ["Oui, le travail a été accompli", "Non : l'article 6 de la loi Hoguet exige un mandat écrit, et percevoir sans mandat est un délit", "Oui, si le vendeur reconnaît la mission par écrit après coup", "Oui, à hauteur de la moitié"]}, {"c": 2, "e": "Cette distinction commande la nature du contrat, les garanties exigées et le déblocage des fonds. Ce n'est pas une nuance de vocabulaire.", "opts": ["Aucune, ce sont deux appellations du même métier", "Le promoteur construit, le constructeur vend", "Le promoteur vend un bien qu'il produit ; le constructeur bâtit sur le terrain du client", "La différence tient uniquement à la taille de l'opération"]}, {"c": 3, "e": "Même logique que celle qui s'applique à vous. Le CIF est par ailleurs immatriculé à l'ORIAS et doit adhérer à une association agréée par l'AMF.", "opts": ["Oui, sans restriction", "Oui, jusqu'à 50 000 € par client", "Oui, s'il dispose d'une garantie financière", "Non, sauf ceux destinés à rémunérer son activité de conseil"]}, {"c": 0, "e": "Le cumul est parfaitement licite ; ce qui ne l'est pas, c'est d'exercer sans détenir le statut correspondant. Chaque statut a sa propre immatriculation, sa propre autorité et ses propres obligations — le cumul des statuts, c'est aussi le cumul des coûts.", "opts": ["Oui : le cumul de statuts est licite, à condition de détenir chacun d'eux séparément", "Non, ces activités sont incompatibles entre elles", "Oui, une seule immatriculation ORIAS suffit pour les trois", "Oui, s'il se déclare conseiller en gestion de patrimoine"]}, {"c": 1, "e": "Le registre unique est public : la vérification prend quelques secondes en ligne — exactement comme votre client peut vérifier la vôtre, ce qui justifie l'obligation de communiquer votre numéro.", "opts": ["En lui demandant sa carte de visite", "En consultant le registre de l'ORIAS, qui est public", "En interrogeant la chambre de commerce et d'industrie", "Ce n'est pas vérifiable par un tiers"]}], VF=[{"r": false, "e": "Faux. Sa rémunération est tarifée : on parle d'émoluments, fixés par un tarif réglementé. Le barème 2026 figure dans la fiche mémo de la journée 6.", "ref": "statut d'officier public et ministériel"}, {"r": true, "e": "Exact. La carte porte une lettre selon l'activité — T pour la transaction, G pour la gestion, S pour le syndic — et un professionnel qui exerce plusieurs activités doit détenir plusieurs cartes.", "ref": "loi n° 70-9 du 2 janvier 1970"}, {"r": false, "e": "Faux. Le CIF est immatriculé au registre unique tenu par l'ORIAS, sans carte professionnelle. Le mécanisme de la carte relève de la loi Hoguet, pas du code monétaire et financier.", "ref": "art. L. 541-1 et s. C. mon. fin."}, {"r": false, "e": "Faux, et c'est un piège classique : son association est agréée par l'AMF. Le mécanisme du filtre associatif est le même que pour les courtiers en opérations de banque vus en journée 4, mais l'autorité diffère.", "ref": "art. L. 541-4 C. mon. fin."}, {"r": true, "e": "Exact, et c'est le point du module. L'appellation n'est pas protégée : il n'existe ni carte, ni registre, ni autorité de tutelle du CGP en tant que tel. Ce sont les activités exercées qui sont réglementées.", "ref": "absence de statut propre au CGP"}, {"r": false, "e": "Faux, sauf s'il détient également le statut de conseiller en investissements financiers. Le cumul est licite, l'exercice sans statut ne l'est pas.", "ref": "art. L. 541-1 et s. C. mon. fin."}];
+var NJ=Object.keys(JZ).length, valide=false, actif=null;
+var TOTAL = NJ + CS.length + VF.length;
+function placesJ(){ return document.querySelectorAll('.zone .depot .jeton').length; }
+function progresse(){
+  var n = placesJ();
+  for(var i=0;i<CS.length;i++){ if(document.querySelector('input[name="ca'+i+'"]:checked')) n++; }
+  for(var m=0;m<VF.length;m++){ if(document.querySelector('input[name="vf'+m+'"]:checked')) n++; }
+  document.getElementById('jauge').style.width = Math.round(n*100/TOTAL)+'%';
+  document.getElementById('compteur').textContent = n+' / '+TOTAL+' réponses';
+  document.getElementById('btn-valider').disabled = (n<TOTAL) || (placesJ()!==NJ) || valide;
+}
+document.querySelectorAll('input[type=radio]').forEach(function(x){ x.addEventListener('change', progresse); });
+function deselect(){ if(actif){ actif.classList.remove('actif'); actif=null; } }
+function deposer(j,c){ if(valide) return; c.appendChild(j); deselect(); progresse(); }
+var res=document.getElementById('reserve');
+document.querySelectorAll('.jeton').forEach(function(j){
+  j.addEventListener('click', function(e){
+    if(valide) return; e.stopPropagation();
+    if(actif && actif!==j){
+      var c=j.parentElement;
+      if(c.classList.contains('depot')||c.classList.contains('reserve')){ deposer(actif,c); return; }
+    }
+    if(j.parentElement.classList.contains('depot')){ deposer(j,res); return; }
+    if(actif===j){ deselect(); return; }
+    deselect(); actif=j; j.classList.add('actif');
+  });
+  j.addEventListener('dragstart', function(e){
+    if(valide){ e.preventDefault(); return; }
+    actif=j; e.dataTransfer.setData('text/plain', j.dataset.id);
+  });
+});
+document.querySelectorAll('.zone').forEach(function(z){
+  var dep=z.querySelector('.depot');
+  z.addEventListener('dragover', function(e){ if(!valide){ e.preventDefault(); z.classList.add('survol'); } });
+  z.addEventListener('dragleave', function(){ z.classList.remove('survol'); });
+  z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('survol'); if(actif) deposer(actif,dep); });
+  z.addEventListener('click', function(){ if(actif) deposer(actif,dep); });
+});
+res.addEventListener('dragover', function(e){ if(!valide) e.preventDefault(); });
+res.addEventListener('drop', function(e){ e.preventDefault(); if(actif) deposer(actif,res); });
+res.addEventListener('click', function(){ if(actif) deposer(actif,res); });
+document.body.addEventListener('click', deselect);
+
+document.getElementById('btn-valider').addEventListener('click', function(e){
+  e.stopPropagation();
+  if(valide) return; valide=true; deselect();
+  var bon=0, bonJ=0, li='';
+  Object.keys(JZ).forEach(function(id){
+    var j=document.querySelector('.jeton[data-id="'+id+'"]');
+    var z=j.closest('.zone'), juste = z && z.dataset.zone===JZ[id];
+    j.classList.add(juste?'bon':'faux'); j.setAttribute('draggable','false');
+    if(juste) bonJ++; else li += '<li><b>'+JL[id]+'</b> → '+ZL[JZ[id]]+'. '+JE[id]+'</li>';
+  });
+  bon += bonJ;
+  var ft=document.getElementById('fbT');
+  ft.innerHTML='<span class="verdict">'+(bonJ===NJ?'✓ Chaque caractéristique à son intervenant':'✗ '+bonJ+' / '+NJ+' bien attribuées')+'</span>'
+    + (li ? '<b>À corriger :</b><ul style="margin:8px 0 0;padding-left:20px">'+li+'</ul>'
+          : 'Et si le conseiller en gestion de patrimoine n\'a pas de colonne, c\'est qu\'il n\'a pas de statut : il cumule ceux des autres.');
+  ft.className='fb on '+(bonJ===NJ?'j':'n');
+  for(var i=0;i<CS.length;i++){
+    var ch=document.querySelector('input[name="ca'+i+'"]:checked');
+    var idx=ch?parseInt(ch.value,10):-1, juste3=(idx===CS[i].c);
+    if(juste3) bon++;
+    document.getElementById('cl'+i+'_'+CS[i].c).classList.add('bonne');
+    if(!juste3 && idx>=0) document.getElementById('cl'+i+'_'+idx).classList.add('mauvaise');
+    document.querySelectorAll('input[name="ca'+i+'"]').forEach(function(r){ r.disabled=true; });
+    var f3=document.getElementById('fca'+i);
+    var h3='<span class="verdict">'+(juste3?'✓ Exact':'✗ Inexact')+'</span>';
+    if(!juste3) h3 += '<div style="margin-bottom:6px"><b>Réponse attendue :</b> '+CS[i].opts[CS[i].c]+'</div>';
+    f3.innerHTML = h3 + CS[i].e;
+    f3.className='fb on '+(juste3?'j':'n');
+  }
+  for(var m=0;m<VF.length;m++){
+    var ch2=document.querySelector('input[name="vf'+m+'"]:checked');
+    var rep=ch2?(ch2.value==='1'):null, juste4=(rep===VF[m].r);
+    if(juste4) bon++;
+    document.getElementById('vl'+m+'_'+(VF[m].r?1:0)).classList.add('bonne');
+    if(!juste4 && ch2) document.getElementById('vl'+m+'_'+ch2.value).classList.add('mauvaise');
+    document.querySelectorAll('input[name="vf'+m+'"]').forEach(function(r){ r.disabled=true; });
+    var f4=document.getElementById('fv'+m);
+    f4.innerHTML='<span class="verdict">'+(juste4?'✓ Exact':'✗ Inexact')+'</span>'+VF[m].e
+               +'<span class="ref">'+VF[m].ref+'</span>';
+    f4.className='fb on '+(juste4?'j':'n');
+  }
+  document.getElementById('btn-valider').disabled=true;
+  document.getElementById('btn-valider').textContent='Atelier validé';
+  afficherBilan(bon, TOTAL,
+    'Cet exercice n\'est pas noté et ne laisse aucune trace : refaites-le autant de fois que nécessaire. '
+    + 'Les deux phrases de secours : <b>le conseil en gestion de patrimoine est une bannière, pas un statut</b> · '
+    + '<b>le cumul de statuts est licite, l\'exercice sans statut ne l\'est pas</b>. Quand les trois activités '
+    + 'passent sans hésitation, enchaînez sur le <b>QCM du module 2</b>.');
+});
+progresse();
+
+document.getElementById('btn-refaire').addEventListener('click',function(){ location.reload(); });
+</script></body></html>
